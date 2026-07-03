@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SF.gov mockups — version gallery</title>
+<style>
+  :root{
+    --navy:#16395F; --navy-dark:#122f4f; --orange:#E85425; --link:#C43C00;
+    --fog:#F4F6F8; --fog2:#DDE2E7; --ink:#25313D; --white:#fff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--fog);}
+  body{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+  /* Masthead */
+  header.top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:18px;flex:none;}
+  header.top h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px;}
+  header.top .sub{font-size:12.5px;opacity:.75;}
+
+  /* Version tabs */
+  .tabs{display:flex;gap:8px;background:var(--navy-dark);padding:10px 22px;flex:none;flex-wrap:wrap;}
+  .tab{appearance:none;border:1px solid transparent;background:rgba(255,255,255,.08);color:#dfe7f0;
+       padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;line-height:1.2;text-align:left;transition:.12s;}
+  .tab small{display:block;opacity:.7;font-size:11px;margin-top:2px;font-weight:400;}
+  .tab b{font-weight:700;}
+  .tab:hover{background:rgba(255,255,255,.16);}
+  .tab.active{background:#fff;color:var(--navy);border-color:#fff;}
+  .tab.active small{opacity:.65;}
+
+  /* Body split */
+  .split{display:flex;flex:1;min-height:0;}
+  nav.pages{width:250px;flex:none;background:#fff;border-right:1px solid var(--fog2);overflow-y:auto;padding:8px;}
+  nav.pages .grp{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#6B7280;padding:12px 10px 6px;}
+  .pagebtn{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:7px;cursor:pointer;color:var(--ink);font-size:13.5px;line-height:1.3;}
+  .pagebtn small{display:block;color:#6B7280;font-size:11.5px;margin-top:1px;}
+  .pagebtn:hover{background:var(--fog);}
+  .pagebtn.active{background:var(--navy);color:#fff;}
+  .pagebtn.active small{color:#c9d6e6;}
+
+  /* Stage */
+  .stage{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--fog);}
+  .toolbar{flex:none;display:flex;align-items:center;gap:14px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--fog2);flex-wrap:wrap;}
+  .crumb{font-size:13px;color:var(--ink);}
+  .crumb b{color:var(--navy);}
+  .crumb .dot{color:#c1c8d0;margin:0 7px;}
+  .spacer{flex:1;}
+  .seg{display:inline-flex;border:1px solid var(--fog2);border-radius:8px;overflow:hidden;}
+  .seg button{border:0;background:#fff;padding:6px 12px;font-size:12.5px;cursor:pointer;color:var(--ink);}
+  .seg button+button{border-left:1px solid var(--fog2);}
+  .seg button.active{background:var(--navy);color:#fff;}
+  .newtab{font-size:12.5px;color:var(--link);text-decoration:none;border:1px solid var(--fog2);padding:6px 11px;border-radius:8px;background:#fff;}
+  .newtab:hover{border-color:var(--link);}
+
+  .framewrap{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;padding:18px;}
+  .framecard{background:#fff;box-shadow:0 2px 18px rgba(20,47,79,.13);border-radius:6px;overflow:hidden;flex:none;transition:width .18s ease;}
+  iframe{display:block;border:0;width:100%;height:100%;background:#fff;}
+  .framecard.full{width:100%;height:100%;box-shadow:none;border-radius:0;}
+  .hint{position:absolute;bottom:10px;right:14px;font-size:11px;color:#8a94a0;pointer-events:none;}
+</style>
+</head>
+<body>
+  <header class="top">
+    <h1>SF.gov mockups</h1>
+    <span class="sub">version gallery — pick a design version, then a page</span>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="split">
+    <nav class="pages" id="pages"></nav>
+    <div class="stage">
+      <div class="toolbar">
+        <span class="crumb" id="crumb"></span>
+        <span class="spacer"></span>
+        <div class="seg" id="widths">
+          <button data-w="full" class="active">Desktop</button>
+          <button data-w="820">Tablet</button>
+          <button data-w="390">Mobile</button>
+        </div>
+        <a class="newtab" id="newtab" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+      </div>
+      <div class="framewrap" id="framewrap">
+        <div class="framecard full" id="framecard">
+          <iframe id="frame" title="mockup preview"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const BATCHES = [
+  {id:'WORKING',  label:'Current with added blue bar', desc:'Blue divider + header image'},
+  {id:'REDESIGN', label:'New blue nav and typeface',   desc:'Navy nav · Public Sans · orange accent'},
+  {id:'COLORWAY', label:'New color palette',           desc:'Bay navy full palette'},
+];
+
+const PAGES = [
+  {id:'get-married',         type:'Step-by-step',        title:'Get married in SF'},
+  {id:'information',         type:'Information',          title:'Paid Parental Leave'},
+  {id:'transaction',        type:'Transaction',          title:'Report a fallen tree'},
+  {id:'data-story',          type:'Data story',           title:'City Second Loan Program'},
+  {id:'event',               type:'Event',                title:'Immigrant Rights hearing'},
+  {id:'meeting',             type:'Meeting',              title:'Muni Funding meeting'},
+  {id:'news',                type:'News',                 title:'Small business newsletter'},
+  {id:'report',              type:'Report',               title:'Transform Downtown'},
+  {id:'resource-collection', type:'Resource collection',  title:'Labor Agreements (MOUs)'},
+  {id:'topic',               type:'Topic',                title:'Building'},
+];
+
+// Non-standard WORKING filenames
+const SPECIAL_WORKING = {
+  'get-married':'SFgov--get-married--white-header-WORKING.html',
+  'information':'SFgov--information--paid-parental-leave--WORKING.html',
+  'transaction':'SFgov--transaction--report-tree--WORKING.html',
+};
+function fileFor(pageId, batch){
+  if(batch==='WORKING' && SPECIAL_WORKING[pageId]) return SPECIAL_WORKING[pageId];
+  return `SFgov--${pageId}--${batch}.html`;
+}
+
+let state = {batch:'COLORWAY', page:'get-married', width:'full'};
+
+// --- restore from hash: #COLORWAY/get-married
+(function initHash(){
+  const h = decodeURIComponent(location.hash.replace(/^#/,''));
+  const [b,p] = h.split('/');
+  if(BATCHES.some(x=>x.id===b)) state.batch=b;
+  if(PAGES.some(x=>x.id===p)) state.page=p;
+})();
+
+const tabsEl=document.getElementById('tabs');
+BATCHES.forEach(b=>{
+  const btn=document.createElement('button');
+  btn.className='tab';btn.dataset.b=b.id;
+  btn.innerHTML=`<b>${b.label}</b><small>${b.desc}</small>`;
+  btn.onclick=()=>{state.batch=b.id;render();};
+  tabsEl.appendChild(btn);
+});
+
+const pagesEl=document.getElementById('pages');
+const grp=document.createElement('div');grp.className='grp';grp.textContent='Content types';
+pagesEl.appendChild(grp);
+PAGES.forEach(p=>{
+  const btn=document.createElement('button');
+  btn.className='pagebtn';btn.dataset.p=p.id;
+  btn.innerHTML=`${p.type}<small>${p.title}</small>`;
+  btn.onclick=()=>{state.page=p.id;render();};
+  pagesEl.appendChild(btn);
+});
+
+document.getElementById('widths').addEventListener('click',e=>{
+  const w=e.target.dataset.w; if(!w)return;
+  state.width=w; render();
+});
+
+const frame=document.getElementById('frame');
+const framecard=document.getElementById('framecard');
+const crumb=document.getElementById('crumb');
+const newtab=document.getElementById('newtab');
+
+function render(){
+  const batch=BATCHES.find(x=>x.id===state.batch);
+  const page=PAGES.find(x=>x.id===state.page);
+  const file=fileFor(state.page,state.batch);
+
+  // active states
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.b===state.batch));
+  document.querySelectorAll('.pagebtn').forEach(t=>t.classList.toggle('active',t.dataset.p===state.page));
+  document.querySelectorAll('#widths button').forEach(t=>t.classList.toggle('active',t.dataset.w===state.width));
+
+  // frame — only reload when the file changes
+  if(frame.getAttribute('src')!==file){ frame.setAttribute('src',file); }
+  newtab.href=file;
+
+  // width
+  if(state.width==='full'){ framecard.classList.add('full'); framecard.style.width=''; }
+  else{ framecard.classList.remove('full'); framecard.style.width=state.width+'px'; }
+
+  crumb.innerHTML=`<b>${batch.label}</b> <span class="dot">/</span> ${page.type} <span class="dot">·</span> ${page.title}`;
+  location.hash=state.batch+'/'+state.page;
+  document.title=`${batch.label} · ${page.type} — SF.gov gallery`;
+}
+render();
+
+// keyboard: ←/→ pages, ↑/↓ versions
+document.addEventListener('keydown',e=>{
+  const pi=PAGES.findIndex(x=>x.id===state.page);
+  const bi=BATCHES.findIndex(x=>x.id===state.batch);
+  if(e.key==='ArrowRight'){state.page=PAGES[(pi+1)%PAGES.length].id;render();}
+  else if(e.key==='ArrowLeft'){state.page=PAGES[(pi-1+PAGES.length)%PAGES.length].id;render();}
+  else if(e.key==='ArrowDown'){state.batch=BATCHES[(bi+1)%BATCHES.length].id;render();}
+  else if(e.key==='ArrowUp'){state.batch=BATCHES[(bi-1+BATCHES.length)%BATCHES.length].id;render();}
+});
+</script>
+</body>
+</html>

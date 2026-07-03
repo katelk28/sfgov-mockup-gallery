@@ -151,6 +151,26 @@ body,.text-black{color:#25313D !important;}
 .sffig .sffig-lang-inner .active{color:#0B0C0C !important;}
 .sffig .sffig-lang-inner a{color:#33667C !important;}
 .sffig .sffig-search input{color:#0B0C0C !important;}
+</style><style id="sfx-colorway3">
+/* Orange split: #E85425 = H2 rule only; #C43C00 = buttons, eyebrow, section bullets, contact icons */
+/* Remove the accent rule under H1 */
+#main-content h1::after{ display:none !important; }
+/* 3px rule under H2s (#E85425) */
+#main-content h2::after{ content:""; display:block; width:39px; height:3px; background:#E85425 !important; margin-top:16px; }
+/* Primary buttons -> #C43C00 (was bright #E85425) */
+.bg-primary500,.bg-primary600,.bg-primary700,.bg-primary800{ background-color:#C43C00 !important; border-color:#C43C00 !important; }
+.bg-primary500:hover,.bg-primary600:hover,.bg-primary700:hover,.bg-primary800:hover,.hover\:bg-primary800:hover,.focus\:bg-primary800:focus{ background-color:#A6330A !important; border-color:#A6330A !important; }
+/* Pre-heading eyebrow (e.g. DATA STORY) -> #C43C00 */
+#main-content [data-testid="page-label"] p{ color:#C43C00 !important; }
+/* Section bullet markers -> #C43C00 (exclude bullets inside callout / card / contact components) */
+#main-content ul li::marker{ color:#C43C00 !important; }
+#main-content [data-testid="spotlight"] ul li::marker,
+#main-content .bg-information100 ul li::marker,
+#main-content .bg-neutral50 ul li::marker,
+#main-content .bg-neutral10 ul li::marker,
+#main-content [data-gtm-id="contact-footer"] ul li::marker{ color:#25313D !important; }
+/* Icons under Contact us -> #C43C00 */
+#main-content [data-gtm-id="contact-footer"] [data-testid="stacked-content-item-icon"]{ color:#C43C00 !important; fill:#C43C00 !important; }
 </style></head><body class="font-body text-black bg-white m-0 p-0 __variable_2242a9 __variable_082b53 __variable_a04e31"><a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a><div id="__next">
 <header role="banner" class="sffig">
   <!-- Desktop / tablet bar (>=768px) -->

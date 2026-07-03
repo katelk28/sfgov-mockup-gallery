@@ -73,6 +73,10 @@
       <div class="toolbar">
         <span class="crumb" id="crumb"></span>
         <span class="spacer"></span>
+        <div class="seg" id="viewmode">
+          <button data-view="preview" class="active">Preview</button>
+          <button data-view="changes">Changes</button>
+        </div>
         <div class="seg" id="widths">
           <button data-w="full" class="active">Desktop</button>
           <button data-w="820">Tablet</button>
@@ -121,7 +125,7 @@ function fileFor(pageId, batch){
   return `SFgov--${pageId}--${batch}.html`;
 }
 
-let state = {batch:'COLORWAY', page:'get-married', width:'full'};
+let state = {batch:'COLORWAY', page:'get-married', width:'full', view:'preview'};
 // cache-buster: refreshed each full page load so redeploys always show latest
 const CB = '?v=' + Date.now();
 
@@ -149,13 +153,17 @@ PAGES.forEach(p=>{
   const btn=document.createElement('button');
   btn.className='pagebtn';btn.dataset.p=p.id;
   btn.innerHTML=`${p.type}<small>${p.title}</small>`;
-  btn.onclick=()=>{state.page=p.id;render();};
+  btn.onclick=()=>{state.page=p.id;state.view='preview';render();};
   pagesEl.appendChild(btn);
 });
 
 document.getElementById('widths').addEventListener('click',e=>{
   const w=e.target.dataset.w; if(!w)return;
   state.width=w; render();
+});
+document.getElementById('viewmode').addEventListener('click',e=>{
+  const v=e.target.dataset.view; if(!v)return;
+  state.view=v; render();
 });
 
 const frame=document.getElementById('frame');
@@ -166,25 +174,31 @@ const newtab=document.getElementById('newtab');
 function render(){
   const batch=BATCHES.find(x=>x.id===state.batch);
   const page=PAGES.find(x=>x.id===state.page);
-  const file=fileFor(state.page,state.batch);
+  const changes = state.view==='changes';
+  const bnum = BATCHES.findIndex(x=>x.id===state.batch)+1;
 
   // active states
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.b===state.batch));
   document.querySelectorAll('.pagebtn').forEach(t=>t.classList.toggle('active',t.dataset.p===state.page));
   document.querySelectorAll('#widths button').forEach(t=>t.classList.toggle('active',t.dataset.w===state.width));
+  document.querySelectorAll('#viewmode button').forEach(t=>t.classList.toggle('active',t.dataset.view===state.view));
+  // device sizing only applies to previews
+  document.getElementById('widths').style.display = changes ? 'none' : '';
 
-  // frame — only reload when the file changes (CB busts stale browser cache after redeploys)
-  const src=file+CB;
+  // frame source: mockup preview, or the batch's change log anchored to its section
+  const src = changes ? ('changes.html'+CB+'#batch'+bnum) : (fileFor(state.page,state.batch)+CB);
   if(frame.getAttribute('src')!==src){ frame.setAttribute('src',src); }
   newtab.href=src;
 
-  // width
-  if(state.width==='full'){ framecard.classList.add('full'); framecard.style.width=''; }
+  // width (changes view is always full-width)
+  if(changes || state.width==='full'){ framecard.classList.add('full'); framecard.style.width=''; }
   else{ framecard.classList.remove('full'); framecard.style.width=state.width+'px'; }
 
-  crumb.innerHTML=`<b>${batch.label}</b> <span class="dot">/</span> ${page.type} <span class="dot">·</span> ${page.title}`;
+  crumb.innerHTML = changes
+    ? `<b>${batch.label}</b> <span class="dot">·</span> Changes &amp; effort to build`
+    : `<b>${batch.label}</b> <span class="dot">/</span> ${page.type} <span class="dot">·</span> ${page.title}`;
   location.hash=state.batch+'/'+state.page;
-  document.title=`${batch.label} · ${page.type} — SF.gov gallery`;
+  document.title=`${batch.label} · ${changes?'Changes':page.type} — SF.gov gallery`;
 }
 render();
 

@@ -170,6 +170,14 @@ body,.text-black{color:#25313D !important;}
 #main-content [data-gtm-id="contact-footer"] ul li::marker{ color:#25313D !important; }
 /* Icons under Contact us -> #C43C00 */
 #main-content [data-gtm-id="contact-footer"] [data-testid="stacked-content-item-icon"]{ color:#C43C00 !important; fill:#C43C00 !important; }
+</style><style id="sfx-colorway4">
+/* Remove the H2 rule from specific sections */
+#main-content [data-testid^="step-"] h2::after{ display:none !important; }            /* step titles (step-by-step) */
+#main-content #whatToKnow::after{ display:none !important; }                          /* transaction: What to know */
+#main-content #meetingDetails::after{ display:none !important; }                      /* meeting: Meeting details */
+#main-content h2:has(svg[data-testid="info-icon"])::after{ display:none !important; } /* event: Details */
+/* H2 weight 600 (was 700) */
+#main-content h2{ font-weight:600 !important; }
 </style></head><body class="font-body text-black bg-white m-0 p-0 __variable_2242a9 __variable_082b53 __variable_a04e31"><a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a><div id="__next">
 <header role="banner" class="sffig">
   <!-- Desktop / tablet bar (>=768px) -->

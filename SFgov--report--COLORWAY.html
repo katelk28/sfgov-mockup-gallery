@@ -67,7 +67,7 @@ body,.text-black{color:#25313D !important;}
 <style id="sfx-colorway3">
 /* Orange split: #E85425 = H2 rule only; #C43C00 = buttons, eyebrow, section bullets, contact icons */
 /* Remove the accent rule under H1 */
-#main-content h1::after{ display:none !important; }
+#main-content h1::after{ display:block !important; }
 /* 3px rule under H2s (#E85425) */
 #main-content h2::after{ content:""; display:block; width:39px; height:3px; background:#E85425 !important; margin-top:16px; }
 /* Primary buttons -> #C43C00 (was bright #E85425) */
@@ -84,6 +84,14 @@ body,.text-black{color:#25313D !important;}
 #main-content [data-gtm-id="contact-footer"] ul li::marker{ color:#25313D !important; }
 /* Icons under Contact us -> #C43C00 */
 #main-content [data-gtm-id="contact-footer"] [data-testid="stacked-content-item-icon"]{ color:#C43C00 !important; fill:#C43C00 !important; }
+</style><style id="sfx-colorway4">
+/* Remove the H2 rule from specific sections */
+#main-content [data-testid^="step-"] h2::after{ display:none !important; }            /* step titles (step-by-step) */
+#main-content #whatToKnow::after{ display:none !important; }                          /* transaction: What to know */
+#main-content #meetingDetails::after{ display:none !important; }                      /* meeting: Meeting details */
+#main-content h2:has(svg[data-testid="info-icon"])::after{ display:none !important; } /* event: Details */
+/* H2 weight 600 (was 700) */
+#main-content h2{ font-weight:600 !important; }
 </style></head><body class="font-body text-black bg-white m-0 p-0 __variable_2242a9 __variable_082b53 __variable_a04e31"><a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a><div id="__next"><style id="sfnav-figma-styles">
 .sfnav{background:#043578;width:100%;color:#FCFCFC}
 .sfnav *{box-sizing:border-box}

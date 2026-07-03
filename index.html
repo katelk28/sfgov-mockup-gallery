@@ -93,6 +93,7 @@ const BATCHES = [
   {id:'WORKING',  label:'Current with added blue bar', desc:'Blue divider + header image'},
   {id:'REDESIGN', label:'New blue nav and typeface',   desc:'Navy nav · Public Sans · orange accent'},
   {id:'COLORWAY', label:'New color palette',           desc:'Bay navy full palette'},
+  {id:'NEWNAV',   label:'New new nav',                 desc:'Color palette + responsive Figma masthead'},
 ];
 
 const PAGES = [
@@ -106,6 +107,7 @@ const PAGES = [
   {id:'report',              type:'Report',               title:'Transform Downtown'},
   {id:'resource-collection', type:'Resource collection',  title:'Labor Agreements (MOUs)'},
   {id:'topic',               type:'Topic',                title:'Building'},
+  {id:'agency',              type:'Agency',               title:'Dept. of Building Inspection'},
 ];
 
 // Non-standard WORKING filenames
@@ -120,6 +122,8 @@ function fileFor(pageId, batch){
 }
 
 let state = {batch:'COLORWAY', page:'get-married', width:'full'};
+// cache-buster: refreshed each full page load so redeploys always show latest
+const CB = '?v=' + Date.now();
 
 // --- restore from hash: #COLORWAY/get-married
 (function initHash(){
@@ -169,9 +173,10 @@ function render(){
   document.querySelectorAll('.pagebtn').forEach(t=>t.classList.toggle('active',t.dataset.p===state.page));
   document.querySelectorAll('#widths button').forEach(t=>t.classList.toggle('active',t.dataset.w===state.width));
 
-  // frame — only reload when the file changes
-  if(frame.getAttribute('src')!==file){ frame.setAttribute('src',file); }
-  newtab.href=file;
+  // frame — only reload when the file changes (CB busts stale browser cache after redeploys)
+  const src=file+CB;
+  if(frame.getAttribute('src')!==src){ frame.setAttribute('src',src); }
+  newtab.href=src;
 
   // width
   if(state.width==='full'){ framecard.classList.add('full'); framecard.style.width=''; }
